@@ -36,23 +36,24 @@ class Graph():
   
         return True
 
-g1 = Graph(5) 
-g1.addEdge(1, 0) 
-g1.addEdge(0, 2) 
-g1.addEdge(0, 3) 
-g1.addEdge(3, 4) 
-print "Graph is a Tree" if g1.isTree() == True else "Graph is a not a Tree"
-  
-g2 = Graph(5) 
-g2.addEdge(1, 0) 
-g2.addEdge(0, 2) 
-g2.addEdge(2, 1) 
-g2.addEdge(0, 3) 
-g2.addEdge(3, 4) 
-print "Graph is a Tree" if g2.isTree() == True else "Graph is a not a Tree"
+if __name__ == "__main__": 
+    g1 = Graph(5) 
+    g1.addEdge(1, 0) 
+    g1.addEdge(0, 2) 
+    g1.addEdge(0, 3) 
+    g1.addEdge(3, 4) 
+    print "Graph is a Tree" if g1.isTree() == True else "Graph is a not a Tree"
+    
+    g2 = Graph(5) 
+    g2.addEdge(1, 0) 
+    g2.addEdge(0, 2) 
+    g2.addEdge(2, 1) 
+    g2.addEdge(0, 3) 
+    g2.addEdge(3, 4) 
+    print "Graph is a Tree" if g2.isTree() == True else "Graph is a not a Tree"
 
-g1 = Graph(5) 
-g1.addEdge(1, 0) 
-g1.addEdge(0, 2) 
-g1.addEdge(3, 4) 
-print "Graph is a Tree" if g1.isTree() == True else "Graph is a not a Tree"
+    g1 = Graph(5) 
+    g1.addEdge(1, 0) 
+    g1.addEdge(0, 2) 
+    g1.addEdge(3, 4) 
+    print "Graph is a Tree" if g1.isTree() == True else "Graph is a not a Tree"
