@@ -1,0 +1,24 @@
+﻿<Window x:Class="WpfSampleApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfSampleApp"
+        mc:Ignorable="d"
+        Title="WFP Example" Height="450" Width="800">
+    <Grid>
+        <Menu HorizontalAlignment="Left" Height="34" VerticalAlignment="Top" Width="795" Grid.ColumnSpan="2">
+            <MenuItem Header="Load" Click="itemLoad_Click"/>
+            <MenuItem Header="Save" Click="itemSave_Click"/>
+            <MenuItem Header="Exit" Click="itemExit_Click"/>
+        </Menu>
+        <Grid>
+            <DataGrid Name="DG1" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="0,36,0.2,-0.2" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="First Name"  Binding="{Binding FirstName}"/>
+                    <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>
