@@ -6,12 +6,12 @@ namespace RestApiUnitTest
     [TestClass]
     public class ApiUnitTest
     {
-        const string url = "http://vautointerview.azurewebsites.net/";
+        const string url = "http://api.coxauto-interview.com/";
 
         [TestMethod]
         public void TestGetDataset()
         {
-            var client = new RestClient(url);
+            var client = new RestClientAsync(url);
             var response = client.GetDatasetAsync().GetAwaiter().GetResult();
 
             Assert.IsNotNull(response);
@@ -22,7 +22,7 @@ namespace RestApiUnitTest
         [TestMethod]
         public void TestPostAnswer()
         {
-            var client = new RestClient(url);
+            var client = new RestClientAsync(url);
             var ds = client.GetDatasetAsync().GetAwaiter().GetResult();
             var cheat = client.GetCheatAsync(ds.datasetId).GetAwaiter().GetResult();
             var response = client.PostAnswerAsync(ds.datasetId, cheat).GetAwaiter().GetResult();
@@ -34,7 +34,7 @@ namespace RestApiUnitTest
         [TestMethod]
         public void TestGetCheat()
         {
-            var client = new RestClient(url);
+            var client = new RestClientAsync(url);
             var ds = client.GetDatasetAsync().GetAwaiter().GetResult();
             var cheat = client.GetCheatAsync(ds.datasetId).GetAwaiter().GetResult();
 
@@ -48,7 +48,7 @@ namespace RestApiUnitTest
         [TestMethod]
         public void TestGetDealers()
         {
-            var client = new RestClient(url);
+            var client = new RestClientAsync(url);
             var ds = client.GetDatasetAsync().GetAwaiter().GetResult();
             var response = client.GetVehiclesAsync(ds.datasetId).GetAwaiter().GetResult();
 
@@ -64,16 +64,12 @@ namespace RestApiUnitTest
             var dealer = client.GetDealerAsync(ds.datasetId, vehicle.dealerId).GetAwaiter().GetResult();
 
             Assert.IsNull(dealer); // it must be so, because we already called GetVehicle!
-
-            string name = client.GetDealerNameById(vehicle.dealerId);
-            Assert.IsNotNull(name);
-            Assert.AreNotEqual("", name);
         }
 
         [TestMethod]
         public void TestGetVehicles()
         {
-            var client = new RestClient(url);
+            var client = new RestClientAsync(url);
             var ds = client.GetDatasetAsync().GetAwaiter().GetResult();
             var response = client.GetVehiclesAsync(ds.datasetId).GetAwaiter().GetResult();
 
@@ -85,7 +81,7 @@ namespace RestApiUnitTest
         [TestMethod]
         public void TestGetVehicle()
         {
-            var client = new RestClient(url);
+            var client = new RestClientAsync(url);
             var ds = client.GetDatasetAsync().GetAwaiter().GetResult();
             var response = client.GetVehiclesAsync(ds.datasetId).GetAwaiter().GetResult();
 

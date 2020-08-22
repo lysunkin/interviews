@@ -1,9 +1,9 @@
 ﻿/// <summary>
-/// Classes for Data Transfer Objects
+/// Classes for Data Transfer Objects (to be represented as JSON on serialization)
 /// </summary>
 namespace RestApiTest
 {
-    public class Dataset
+    public class DatasetIdResponse
     {
         public string datasetId;
     }
@@ -37,17 +37,17 @@ namespace RestApiTest
 
     public class Answer
     {
-        public Dealer[] dealers;
+        public DealerAnswer[] dealers;
     }
 
-    public class Dealer
+    public class DealerAnswer
     {
         public int dealerId;
         public string name;
-        public Vehicle[] vehicles;
+        public VehicleAnswer[] vehicles;
     }
 
-    public class Vehicle
+    public class VehicleAnswer
     {
         public int vehicleId;
         public int year;

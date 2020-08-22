@@ -2,6 +2,9 @@
 
 namespace RestApiTest
 {
+    /// <summary>
+    /// Custom exception
+    /// </summary>
     public class ApiException : Exception
     {
         public ApiException()

@@ -1,0 +1,100 @@
+test 1
+
+Start GetVehiclesAsync
+Finish GetVehiclesAsync
+Start GetVehicleAsync 1646610164
+Start GetVehicleAsync 224090576
+Start GetVehicleAsync 760565792
+Start GetVehicleAsync 2097120863
+Start GetVehicleAsync 927520814
+Start GetVehicleAsync 786899279
+Start GetVehicleAsync 539402214
+Start GetVehicleAsync 1272629474
+Start GetVehicleAsync 103260695
+Start GetDealerAsync 1926787434
+Start GetDealerAsync 956895129
+Finish GetVehicleAsync 927520814
+Finish GetVehicleAsync 1646610164
+Finish GetDealerAsync 1926787434
+Finish GetVehicleAsync 224090576
+Start GetDealerAsync 882765011
+Finish GetVehicleAsync 786899279
+Finish GetVehicleAsync 2097120863
+Finish GetVehicleAsync 103260695
+Finish GetVehicleAsync 539402214
+Finish GetDealerAsync 882765011
+Finish GetVehicleAsync 1272629474
+Finish GetDealerAsync 956895129
+Finish GetVehicleAsync 760565792
+Start PostAnswerAsync
+Finish PostAnswerAsync
+True, Congratulations., 6779
+
+
+test 2
+
+Async approach:
+Start GetDatasetAsync
+Finish GetDatasetAsync
+Start GetVehiclesAsync
+Finish GetVehiclesAsync
+Start GetVehicleAsync 90164989
+Start GetVehicleAsync 899430609
+Start GetVehicleAsync 1462431064
+Start GetVehicleAsync 722489608
+Start GetVehicleAsync 1465764374
+Start GetVehicleAsync 402027228
+Start GetVehicleAsync 187889580
+Start GetVehicleAsync 919071682
+Start GetVehicleAsync 1485215157
+Start GetDealerAsync 1890541061
+Start GetDealerAsync 1063101192
+Finish GetVehicleAsync 90164989
+Start GetDealerAsync 581100392
+Finish GetDealerAsync 1063101192
+Finish GetVehicleAsync 722489608
+Finish GetDealerAsync 1890541061
+Finish GetVehicleAsync 899430609
+Finish GetVehicleAsync 919071682
+Finish GetVehicleAsync 1465764374
+Finish GetVehicleAsync 1462431064
+Finish GetVehicleAsync 1485215157
+Finish GetVehicleAsync 187889580
+Finish GetDealerAsync 581100392
+Finish GetVehicleAsync 402027228
+Start PostAnswerAsync
+Finish PostAnswerAsync
+True, Congratulations., 6537
+
+test 3
+
+Start GetDatasetAsync
+Finish GetDatasetAsync - elapsed: 287
+Start GetVehiclesAsync
+Finish GetVehiclesAsync - elapsed: 54
+Start GetVehicleAsync 818217374
+Start GetVehicleAsync 1592283468
+Start GetVehicleAsync 1713780294
+Start GetVehicleAsync 319945173
+Start GetVehicleAsync 1551535049
+Start GetVehicleAsync 879092618
+Start GetVehicleAsync 1190692703
+Start GetVehicleAsync 824242552
+Start GetVehicleAsync 1597123298
+Start GetDealerAsync 504374514
+Finish GetVehicleAsync 818217374 - elapsed: 2062
+Start GetDealerAsync 1139746103
+Finish GetVehicleAsync 879092618 - elapsed: 4118
+Finish GetDealerAsync 504374514 - elapsed: 2094
+Finish GetVehicleAsync 319945173 - elapsed: 4154
+Start GetDealerAsync 1466866999
+Finish GetVehicleAsync 1190692703 - elapsed: 6176
+Finish GetVehicleAsync 1551535049 - elapsed: 6184
+Finish GetVehicleAsync 1592283468 - elapsed: 6187
+Finish GetDealerAsync 1139746103 - elapsed: 4051
+Finish GetVehicleAsync 1713780294 - elapsed: 6208
+Finish GetDealerAsync 1466866999 - elapsed: 2451
+Finish GetVehicleAsync 824242552 - elapsed: 6596
+Finish GetVehicleAsync 1597123298 - elapsed: 8280
+Start PostAnswerAsync
+Finish PostAnswerAsync - elapsed: 165

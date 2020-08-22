@@ -2,13 +2,14 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace RestApiTest
 {
-    public class RestClient
+    public class RestClientAsync
     {
         private HttpClient client;
 
@@ -30,16 +31,6 @@ namespace RestApiTest
             }
         }
 
-        [Obsolete("This method is for testing only!", false)]
-        public string GetDealerNameById(int id)
-        {
-            var di = DealersCollection[id];
-            if (di != null)
-                return di.name;
-            else
-                return null;
-        }
-
         /// <summary>
         /// element of collection for Dealer -> Vehicles relationship
         /// </summary>
@@ -47,15 +38,15 @@ namespace RestApiTest
         {
             public int dealerId;
             public string name;
-            private BlockingCollection<Vehicle> _vehicles;
-            public BlockingCollection<Vehicle> Vehicles
+            private BlockingCollection<VehicleAnswer> _vehicles;
+            public BlockingCollection<VehicleAnswer> Vehicles
             {
                 get
                 {
                     lock (this)
                     {
                         if (_vehicles == null)
-                            _vehicles = new BlockingCollection<Vehicle>();
+                            _vehicles = new BlockingCollection<VehicleAnswer>();
                     }
                     return _vehicles;
                 }
@@ -65,7 +56,7 @@ namespace RestApiTest
         /// <summary>
         /// constructor reading URL from app.config or web.config
         /// </summary>
-        public RestClient() : this(ConfigurationManager.AppSettings["endPoint"])
+        public RestClientAsync() : this(ConfigurationManager.AppSettings["endPoint"])
         {
         }
 
@@ -73,7 +64,7 @@ namespace RestApiTest
         /// universal constructor
         /// </summary>
         /// <param name="apiUrl">API Url</param>
-        public RestClient(string apiUrl)
+        public RestClientAsync(string apiUrl)
         {
             client = new HttpClient
             {
@@ -91,25 +82,41 @@ namespace RestApiTest
         /// <returns>result of evaluation</returns>
         public async Task<AnswerResponse> PostAnswerAsync(string datasetId, Answer answer)
         {
-            HttpResponseMessage response = await client.PostAsJsonAsync($"api/{datasetId}/answer", answer);
+            Debug.WriteLine("Start PostAnswerAsync");
+            long startTicks = DateTime.UtcNow.Ticks;
+
+            HttpResponseMessage response = await client.PostAsJsonAsync(String.Format(Constants.POST_ANSWER_URL, datasetId), answer);
             response.EnsureSuccessStatusCode();
             if (!response.IsSuccessStatusCode)
                 throw new ApiException($"PostAnswerAsync: status code {response.StatusCode}");
 
-            return await response.Content.ReadAsAsync<AnswerResponse>();
+            var answerResponse = await response.Content.ReadAsAsync<AnswerResponse>();
+
+            long elapsed = (DateTime.UtcNow.Ticks - startTicks) / 10000;
+            Debug.WriteLine($"Finish PostAnswerAsync - elapsed: {elapsed}");
+
+            return answerResponse;
         }
 
         /// <summary>
         /// Retrives dataset id (this method starts interation with API)
         /// </summary>
         /// <returns>Dataset object (contains the ID)</returns>
-        public async Task<Dataset> GetDatasetAsync()
+        public async Task<DatasetIdResponse> GetDatasetAsync()
         {
-            HttpResponseMessage response = await client.GetAsync("api/datasetId");
+            Debug.WriteLine("Start GetDatasetAsync");
+            long startTicks = DateTime.UtcNow.Ticks;
+
+            HttpResponseMessage response = await client.GetAsync(Constants.GET_DATASET_URL);
             if (!response.IsSuccessStatusCode)
                 throw new ApiException($"GetDatasetAsync: status code {response.StatusCode}");
 
-            return await response.Content.ReadAsAsync<Dataset>();
+            var dataset = await response.Content.ReadAsAsync<DatasetIdResponse>();
+
+            long elapsed = (DateTime.UtcNow.Ticks - startTicks) / 10000;
+            Debug.WriteLine($"Finish GetDatasetAsync - elapsed: {elapsed}");
+
+            return dataset;
         }
 
         /// <summary>
@@ -119,11 +126,19 @@ namespace RestApiTest
         /// <returns>Sample data</returns>
         public async Task<Answer> GetCheatAsync(string datasetId)
         {
-            HttpResponseMessage response = await client.GetAsync($"api/{datasetId}/cheat");
+            Debug.WriteLine("Start GetCheatAsync");
+            long startTicks = DateTime.UtcNow.Ticks;
+
+            HttpResponseMessage response = await client.GetAsync(String.Format(Constants.GET_CHEAT_URL, datasetId));
             if (!response.IsSuccessStatusCode)
                 throw new ApiException($"GetCheatAsync: status code {response.StatusCode}");
 
-            return await response.Content.ReadAsAsync<Answer>();
+            var answer = await response.Content.ReadAsAsync<Answer>();
+
+            long elapsed = (DateTime.UtcNow.Ticks - startTicks) / 10000;
+            Debug.WriteLine($"Finish GetCheatAsync - elapsed: {elapsed}");
+
+            return answer;
         }
 
         /// <summary>
@@ -133,11 +148,19 @@ namespace RestApiTest
         /// <returns>Collection of IDs</returns>
         public async Task<VehiclesResponse> GetVehiclesAsync(string datasetId)
         {
-            HttpResponseMessage response = await client.GetAsync($"api/{datasetId}/vehicles");
+            Debug.WriteLine("Start GetVehiclesAsync");
+            long startTicks = DateTime.UtcNow.Ticks;
+
+            HttpResponseMessage response = await client.GetAsync(String.Format(Constants.GET_VEHICLES_URL, datasetId));
             if (!response.IsSuccessStatusCode)
                 throw new ApiException($"GetVehiclesAsync: status code {response.StatusCode}");
 
-            return await response.Content.ReadAsAsync<VehiclesResponse>();
+            var vehiclesResponse = await response.Content.ReadAsAsync<VehiclesResponse>();
+
+            long elapsed = (DateTime.UtcNow.Ticks - startTicks) / 10000;
+            Debug.WriteLine($"Finish GetVehiclesAsync - elapsed: {elapsed}");
+
+            return vehiclesResponse;
         }
 
         /// <summary>
@@ -150,26 +173,32 @@ namespace RestApiTest
         {
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"api/{datasetId}/vehicles/{vehicleId}");
+                Debug.WriteLine($"Start GetVehicleAsync {vehicleId}");
+                long startTicks = DateTime.UtcNow.Ticks;
+
+                HttpResponseMessage response = await client.GetAsync(String.Format(Constants.GET_VEHICLE_URL, datasetId, vehicleId));
 
                 if (!response.IsSuccessStatusCode)
                     throw new ApiException($"GetVehicleAsync: status code {response.StatusCode}");
 
-                VehicleResponse vehicle = await response.Content.ReadAsAsync<VehicleResponse>();
+                VehicleResponse vehicleResponse = await response.Content.ReadAsAsync<VehicleResponse>();
 
-                Vehicle v = new Vehicle()
+                VehicleAnswer vehicle = new VehicleAnswer()
                 {
-                    vehicleId = vehicle.vehicleId,
-                    year = vehicle.year,
-                    make = vehicle.make,
-                    model = vehicle.model
+                    vehicleId = vehicleResponse.vehicleId,
+                    year = vehicleResponse.year,
+                    make = vehicleResponse.make,
+                    model = vehicleResponse.model
                 };
 
-                await GetDealerAsync(datasetId, vehicle.dealerId);
+                await GetDealerAsync(datasetId, vehicleResponse.dealerId);
 
-                DealersCollection[vehicle.dealerId].Vehicles.Add(v);
+                DealersCollection[vehicleResponse.dealerId].Vehicles.Add(vehicle);
 
-                return vehicle;
+                long elapsed = (DateTime.UtcNow.Ticks - startTicks) / 10000;
+                Debug.WriteLine($"Finish GetVehicleAsync {vehicleId} - elapsed: {elapsed}");
+
+                return vehicleResponse;
             }
             catch (Exception e)
             {
@@ -191,16 +220,23 @@ namespace RestApiTest
                 if (DealersCollection.ContainsKey(dealerId))
                     return null;
 
+                Debug.WriteLine($"Start GetDealerAsync {dealerId}");
+                long startTicks = DateTime.UtcNow.Ticks;
+
+                // reserve dealer id for processing by current task (if two tasks are trying to deal with the same dealerId)
                 DealersCollection[dealerId] = new DealerInternal();
 
-                HttpResponseMessage response = await client.GetAsync($"api/{datasetId}/dealers/{dealerId}");
+                HttpResponseMessage response = await client.GetAsync(String.Format(Constants.GET_DEALER_URL, datasetId, dealerId));
 
                 if (!response.IsSuccessStatusCode)
                     throw new ApiException($"GetDealerAsync: status code {response.StatusCode}");
 
                 DealerResponse dealer = await response.Content.ReadAsAsync<DealerResponse>();
-                DealersCollection[dealer.dealerId].dealerId = dealer.dealerId;
-                DealersCollection[dealer.dealerId].name = dealer.name;
+                DealersCollection[dealerId].dealerId = dealer.dealerId;
+                DealersCollection[dealerId].name = dealer.name;
+
+                long elapsed = (DateTime.UtcNow.Ticks - startTicks) / 10000;
+                Debug.WriteLine($"Finish GetDealerAsync {dealerId} - elapsed: {elapsed}");
 
                 return dealer;
             }
@@ -218,21 +254,44 @@ namespace RestApiTest
         {
             try
             {
-                Dataset ds = await GetDatasetAsync();
-                Answer cheat = await GetCheatAsync(ds.datasetId);
-                VehiclesResponse vs = await GetVehiclesAsync(ds.datasetId);
+                DatasetIdResponse dataset = await GetDatasetAsync();
+                VehiclesResponse vehicles = await GetVehiclesAsync(dataset.datasetId);
 
                 List<Task> tasks = new List<Task>();
-                foreach (int vId in vs.vehicleIds)
-                    tasks.Add(Task.Run(() => GetVehicleAsync(ds.datasetId, vId)));
+                foreach (int vehicleId in vehicles.vehicleIds)
+                    tasks.Add(Task.Run(() => GetVehicleAsync(dataset.datasetId, vehicleId)));
 
                 await Task.WhenAll(tasks);
 
-                Answer a = ConvertToAnswer();
+                Answer answer = ConvertToAnswer();
 
                 // Post the answer
-                AnswerResponse ar = await PostAnswerAsync(ds.datasetId, a);
-                return ar;
+                AnswerResponse answerResponse = await PostAnswerAsync(dataset.datasetId, answer);
+                return answerResponse;
+            }
+            catch (Exception e)
+            {
+                throw new ApiException(e.Message, e.InnerException);
+            }
+        }
+
+        public async Task<AnswerResponse> RunDataSetAsync(string datasetId)
+        {
+            try
+            {
+                VehiclesResponse vehicles = await GetVehiclesAsync(datasetId);
+
+                List<Task> tasks = new List<Task>();
+                foreach (int vehicleId in vehicles.vehicleIds)
+                    tasks.Add(Task.Run(() => GetVehicleAsync(datasetId, vehicleId)));
+
+                await Task.WhenAll(tasks);
+
+                Answer answer = ConvertToAnswer();
+
+                // Post the answer
+                AnswerResponse answerResponse = await PostAnswerAsync(datasetId, answer);
+                return answerResponse;
             }
             catch (Exception e)
             {
@@ -246,22 +305,22 @@ namespace RestApiTest
         /// <returns>Answer object</returns>
         private Answer ConvertToAnswer()
         {
-            Answer a = new Answer();
-            int iDealer = 0;
-            a.dealers = new Dealer[DealersCollection.Count];
-            foreach (var dDi in DealersCollection)
+            Answer answer = new Answer();
+            int dealerIndex = 0;
+            answer.dealers = new DealerAnswer[DealersCollection.Count];
+            foreach (var dealer in DealersCollection)
             {
-                DealerInternal d = dDi.Value;
-                a.dealers[iDealer] = new Dealer
+                DealerInternal d = dealer.Value;
+                answer.dealers[dealerIndex] = new DealerAnswer
                 {
                     dealerId = d.dealerId,
                     name = d.name,
                     vehicles = d.Vehicles.ToArray()
                 };
-                iDealer++;
+                dealerIndex++;
             }
 
-            return a;
+            return answer;
         }
     }
 }
