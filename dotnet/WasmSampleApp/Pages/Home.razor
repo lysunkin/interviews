@@ -1,0 +1,26 @@
+﻿@page "/"
+
+@using System
+
+<h3>Greeting and Counter</h3>
+<input @bind="name" placeholder="Enter your name" />
+<button @onclick="UpdateGreeting">Greet</button>
+<p>@greetingMessage</p>
+<button @onclick="IncrementCounter">Increment Counter</button>
+<p>Counter: @counter</p>
+
+@code {
+    private string name = "";
+    private string greetingMessage = "Hello!";
+    private int counter = 0;
+
+    private void UpdateGreeting()
+    {
+        greetingMessage = $"Hello, {name}!";
+    }
+
+    private void IncrementCounter()
+    {
+        counter++;
+    }
+}
