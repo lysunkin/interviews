@@ -7,12 +7,10 @@ import (
 func islands(islandMap [][]int) int {
 
 	rows := len(islandMap)
-	fmt.Println("rows =", rows)
 
 	var cols int
 	if rows > 0 {
 		cols = len(islandMap[0])
-		fmt.Println("cols =", cols)
 	}
 
 	if rows == 0 || cols == 0 {
@@ -56,6 +54,12 @@ func move(islandMap [][]int, visited [][]bool, i, j int) {
 	}
 }
 
+func printMap(islandMap [][]int) {
+	for i := 0; i < len(islandMap); i++ {
+		fmt.Println(islandMap[i])
+	}
+}
+
 func main() {
 	islands1 := [][]int{
 		{1, 1, 0, 1},
@@ -77,7 +81,10 @@ func main() {
 		{0, 1, 1, 1, 0, 1},
 	}
 
-	fmt.Println(islands(islands1))
-	fmt.Println(islands(islands2))
-	fmt.Println(islands(islands3))
+	printMap(islands1)
+	fmt.Println("Islands:", islands(islands1))
+	printMap(islands2)
+	fmt.Println("Islands:", islands(islands2))
+	printMap(islands3)
+	fmt.Println("Islands:", islands(islands3))
 }
